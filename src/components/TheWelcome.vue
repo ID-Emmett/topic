@@ -1,82 +1,189 @@
 <script setup>
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
-import CommunityIcon from './icons/IconCommunity.vue'
-import SupportIcon from './icons/IconSupport.vue'
+import { ref } from 'vue'
+import emitter from "../utils/mitt.js";
+
+
+
+defineProps({
+  textData: {
+    type: Object,
+    required: true
+  }
+})
+
+emitter.on("accordion", (res) => {
+  if (!accordion.value) switchList.value = false
+  accordion.value = !accordion.value
+
+})
+emitter.on("switchList", (res) => {
+  accordion.value = false
+  switchList.value = !switchList.value
+})
+
+const switchList = ref(false)
+
+const accordion = ref(true)
+
+const heightObj = { activity: null }
+
+const txtDom = ref()
+
+const fold = (i) => {
+
+  const h = txtDom.value[i].scrollHeight
+
+  heightObj[i] = heightObj[i] === undefined ? (accordion.value ? h : (switchList.value ? 0 : h)) : heightObj[i] === h ? 0 : h
+
+  if (accordion.value) {
+    for (const key in heightObj) {
+      if (key === 'activity') heightObj.activity = heightObj.activity === i ? null : i
+      else txtDom.value[key].style.height = 0 + 'px'
+    }
+    setTimeout(() => {
+      txtDom.value[i].style.height = (heightObj.activity === i ? h : 0) + 'px'
+    }, 10);
+  } else {
+    txtDom.value[i].style.height = (switchList.value ? h : 0) + 'px'
+    setTimeout(() => {
+      txtDom.value[i].style.height = heightObj[i] + 'px'
+    }, 10);
+  }
+
+}
 </script>
 
 <template>
-  <WelcomeItem>
-    <template #icon>
-      <DocumentationIcon />
-    </template>
-    <template #heading>Documentation</template>
-
-    Vue’s
-    <a href="https://vuejs.org/" target="_blank" rel="noopener">official documentation</a>
-    provides you with all information you need to get started.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <ToolingIcon />
-    </template>
-    <template #heading>Tooling</template>
-
-    <div style="height: 0;overflow: hidden;">
-      This project is served and bundled with This project is served and bundled with This project is served and bundled with This project is served
-      and bundled with This project is served and bundled with This project is served and bundled with This project is served and bundled with This
-      project is served and bundled with This project is served and bundled with This project is served and bundled with
-      <a href="https://vitejs.dev/guide/features.html" target="_blank" rel="noopener">Vite</a>. The recommended IDE setup is
-      <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode</a> +
-      <a href="https://github.com/johnsoncodehk/volar" target="_blank" rel="noopener">Volar</a>. If you need to test your components and web pages,
-      check out <a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a> and
-      <a href="https://on.cypress.io/component" target="_blank">Cypress Component Testing</a>.
-
-      <br />
-
-      More instructions are available in <code>README.md</code>.
+  <div class="item" v-for="(item, index) in textData" :key="'index' + index">
+    <i @click="fold(index)">{{ index + 1 }}</i>
+    <div class="details">
+      <h3 v-html="item.name" @click="fold(index)"></h3>
+      <div v-html="`<pre>${item.value}</pre>`" :class="[switchList ? 'openTxt' : 'closeTxt']" ref="txtDom"></div>
     </div>
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <EcosystemIcon />
-    </template>
-    <template #heading>Ecosystem</template>
-
-    Get official tools and libraries for your project:
-    <a href="https://pinia.vuejs.org/" target="_blank" rel="noopener">Pinia</a>,
-    <a href="https://router.vuejs.org/" target="_blank" rel="noopener">Vue Router</a>,
-    <a href="https://test-utils.vuejs.org/" target="_blank" rel="noopener">Vue Test Utils</a>, and
-    <a href="https://github.com/vuejs/devtools" target="_blank" rel="noopener">Vue Dev Tools</a>. If you need more resources, we suggest paying
-    <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">Awesome Vue</a>
-    a visit.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <CommunityIcon />
-    </template>
-    <template #heading>Community</template>
-
-    Got stuck? Ask your question on
-    <a href="https://chat.vuejs.org" target="_blank" rel="noopener">Vue Land</a>, our official Discord server, or
-    <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener">StackOverflow</a>. You should also subscribe to
-    <a href="https://news.vuejs.org" target="_blank" rel="noopener">our mailing list</a> and follow the official
-    <a href="https://twitter.com/vuejs" target="_blank" rel="noopener">@vuejs</a>
-    twitter account for latest news in the Vue world.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <SupportIcon />
-    </template>
-    <template #heading>Support Vue</template>
-
-    As an independent project, Vue relies on community backing for its sustainability. You can help us by
-    <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
-  </WelcomeItem>
+  </div>
 </template>
+<style>
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  *word-wrap: break-word;
+  *white-space: normal;
+  text-align: start;
+  width: 1200px;
+  padding: 4rem 0 6rem 0 !important;
+  font-size: 1.1rem;
+  color: var(--vt-c-black);
+  transition: color 0.5s;
+  font-weight: 400;
+  line-height: 2rem;
+}
+pre span {
+  color: #e6a23c;
+  color: #67c23a;
+  letter-spacing: 0.021em;
+}
+h3 span {
+  color: #409eff;
+  color: #f56c6c;
+  color: #6483a1;
+  letter-spacing: 0.021em;
+}
+</style>
+<style scoped>
+.item {
+  margin-top: 0rem;
+  display: flex;
+}
+
+.details {
+  flex: 1;
+  margin-left: calc(var(--section-gap) / 2);
+}
+.openTxt {
+  transition: all 0.4s;
+  overflow: hidden;
+}
+.closeTxt {
+  height: 0px;
+  transition: all 0.4s;
+  overflow: hidden;
+}
+
+i {
+  display: flex;
+  place-items: center;
+  place-content: center;
+  width: 32px;
+  height: 32px;
+  user-select: none;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  /* color: var(--color-heading); */
+  color: #409eff;
+  font-synthesis: style;
+  font-weight: 600;
+  font-family: sans-serif;
+  letter-spacing: 0.011em;
+  user-select: none;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 4rem;
+}
+
+@media (min-width: 1024px) {
+  .item {
+    margin-top: 0rem;
+    margin-left: calc(var(--section-gap) / 2);
+    padding-bottom: 0;
+  }
+
+  i {
+    top: var(--position-center);
+    left: -26px;
+    position: absolute;
+    border: 1px solid var(--color-border);
+    background: var(--color-background);
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    z-index: 4;
+    margin-top: 0.5rem;
+    transition: top 0.9s, background 0.5s;
+  }
+
+  .item:before {
+    content: ' ';
+    border-left: 1px solid var(--color-border);
+    position: absolute;
+    left: 0;
+    bottom: calc(50%);
+    height: calc(50% - 25px);
+    z-index: 3;
+  }
+
+  .item:after {
+    content: ' ';
+    border-left: 1px solid var(--color-border);
+    position: absolute;
+    left: 0;
+    top: calc(50%);
+    height: calc(50% + 25px);
+    z-index: 3;
+  }
+
+  .item:first-of-type:before {
+    display: none;
+  }
+
+  .item:last-of-type:after {
+    display: none;
+  }
+}
+</style>
