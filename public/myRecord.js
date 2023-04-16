@@ -2,7 +2,7 @@
 /*
 
         因为js是单线程的，使用事件轮询机制可以实现异步操作。
-        
+
         宏任务与微任务:
         macrotask：包含执行整体的js代码，事件回调，XHR回调，定时器（setTimeout/setInterval/setImmediate），IO操作，UI render
         microtask：更新应用程序状态的任务，包括promise回调，MutationObserver，process.nextTick，Object.observe
@@ -31,7 +31,7 @@
 //?  3，Vue与React
 /*
         1，模板编写的区别，vue写的是近似常规HTML，react有专门的jsx语法。
-        2，vue底层重写了八个数组方法
+        2，vue2底层重写了八个数组方法
         3，react单项数据流，vue数据响应式，react的优化需要手动，vue自动，问题是若是vue的state过多，
                 watcher也会很多会导致卡顿，所以大型应用使用react更加可控。
         4，类式组件的写法和声名式的写法
@@ -41,7 +41,7 @@
 /*
         通过数据劫持结合发布者-订阅者模式的方式来实现的,实例化时遍历属性，为属性绑定set和get方法进行劫持。
         首先通过Object.defineProperty来监听属性，当这个属性的值发生变化时通过set方法设定后续操作，
-        
+
         在vue中大致是通过Object.defineProperty作为发布者劫持数据，编译时将v-model v-bind等指令作为订阅者都添加到
         一个数组dep中，发生数据变化时通过set方法通知订阅者dep，dep数组就会循环执行订阅者们的update方法更新视图
 
@@ -190,12 +190,12 @@
 */
 //?  16，XSS,CSRF攻击
 /*
-       CSRF: 跨站请求伪造。引诱用户打开危险的网站，在危险网站中，利用用户的登录状态发起跨站请求 利用cookie
-       解决CSRF攻击:1，验证HTTP Referer 字段 2，请求携带token 3，验证码 4，尽量使用post请求
+        CSRF: 跨站请求伪造。引诱用户打开危险的网站，在危险网站中，利用用户的登录状态发起跨站请求 利用cookie
+        解决CSRF攻击:1，验证HTTP Referer 字段 2，请求携带token 3，验证码 4，尽量使用post请求
 
-       XSS:代码注入攻击。攻击者通过在目标网站上注入恶意脚本，使之在用户的浏览器上运行。利用这些恶意脚本，
-       攻击者可获取用户的敏感信息如 Cookie、SessionID 等，进而危害数据安全.
-       解决XSS攻击:过滤输入和转义输出
+        XSS:代码注入攻击。攻击者通过在目标网站上注入恶意脚本，使之在用户的浏览器上运行。利用这些恶意脚本，
+        攻击者可获取用户的敏感信息如 Cookie、SessionID 等，进而危害数据安全.
+        解决XSS攻击:过滤输入和转义输出
 */
 //?  17，HTTP1与HTTP2
 /*
@@ -551,7 +551,7 @@
 /*
         使用合理的HTML标签表达页面结构，能够通过标签判断内容。
         语义化的好处:利于SEO、没有CSS也能很好的呈现页面结构，利于开发维护
-        常用标签: ul li nav(导航) footer(页脚) code(代码) em(斜体)...
+        常用标签: ul li nav(导航) footer(页脚) ...
 */
 //?  40，数组扁平化
 /*
@@ -572,7 +572,8 @@
              }
            }
            fn(arr)
-           console.log(res) */
+           console.log(res)
+*/
 //?  41，高阶函数、高阶组件
 /*
         一个函数能接收另一个函数作为参数或返回值，这就是高阶函数。
@@ -695,7 +696,7 @@
         | 向下兼容,向上兼容
         1，优雅降级:  预先开发完整项目功能，再针对各浏览器作测试和修复适配。
         2，渐进增强:  预先针对低版本浏览器构建基础功能，再针对高级浏览器进行效果、交互、追加功能提升体验。
-     */
+*/
 //?  54，webpack
 //?  55，伪类与伪元素
 /*
@@ -703,7 +704,7 @@
         伪类使用单冒号: hover、nth-child(2n)选择子元素 link未访问、visted访问过、focus等
         伪元素使用双冒号: after后、before前、first-line添加样式到文本首行、first-letter首字母
         总结: 伪类的效果需要一个实际的类才能达到。伪元素需要实际的元素达到。
-        */
+*/
 //?  56，nextTick
 /*
         解释: Vue执行DOM的异步更新，只要观察到数据变化，vue会开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。
@@ -715,7 +716,7 @@
         分析源码: 把回调函数放入callbacks等待执行，将执行函数放到微任务或宏任务中(根据环境，优先微任务)，
                 事件循环到了微任务或宏任务，执行函数依次执行callbacks回调
 
-                Vue 在内部尝试对异步队列使用原生的 Promise.then 和MessageChannel （全no），如果执行环境不支持，会采用 setTimeout(fn, 0)代替
+                Vue 在内部尝试对异步队列使用原生的 Promise.then 和MessageChannel，如果执行环境不支持，会采用 setTimeout(fn, 0)代替
 
         Vue.nextTick() 是全局方法。this.$nextTick() 是实例方法
 
@@ -726,7 +727,7 @@
 /*
         被<keep-alive>包裹的组件或router-view会缓存，且该组件会多两个生命周期，
         activated、deactivated。
-        1.activated（啊提尾的）：首次进入触发的顺序是created->mounted->activated  离开时触发deactivated 再次进入只触发activated
+        1.activated：首次进入触发的顺序是created->mounted->activated  离开时触发deactivated 再次进入只触发activated
         2.deactivated: 组件停用时会触发deactivated，当再次前进或者后退的时候只触发activated
 
         include和exclude用法: <keep-alive include="bookLists,bookLists"><keep-alive exclude="indexLists">
@@ -786,7 +787,7 @@
                           父组件监听事件v-on:event=’onevent‘，子孙组件使用this.$emit(‘event‘,‘数据‘)触发，父孙中间组件就是用v-on$listteners传递
                   inheritAttrs: false  只继承class属性 true继承除props外的所有属性（元素结构会显示值）
 
-        6，provide（破外夫）/inject
+        6，provide/inject
                   主要在开发高阶插件/组件库时使用，不推荐普通代码使用
                   父组件注册了provide，子组件无论层级多深都能通过注册inject拿到值
         7，EventBus
@@ -808,6 +809,8 @@
         8.$refs
                   父组件给子组件绑定ref='child'即可使用this.$refs.child拿到子组件的变量或方法
         9.Pinia
+        10.mitt
+                  vue3的事件总线
 
 */
 //?  61，Vue hooks
@@ -815,7 +818,7 @@
         理解：js代码组件化，UI和逻辑解耦提高可维护性
         使用：封装某一功能的代码，在需要的地方导入调用（自定义hooks）
 
-        2023： hooks一般是带有生命周期或者是vue api的，涉及到变量保存等，普通函数例如 utils（u跳熬s） 一般是工具类方法
+        2023： hooks一般是带有生命周期或者是vue api的，涉及到变量保存等，普通函数例如 utils 一般是工具类方法
 */
 //?  62，React hooks
 /*
@@ -892,9 +895,9 @@
 //?  68，自定义指令
 /*
         自定义指令一般是用来操作DOM的，或者用来集成第三方插件(方便使用插件，例如指令传参配置插件调用)
-        使用方法: (directive 低rua提夫)分为全局注册和局部注册，然后在模块中直接使用。
+        使用方法: (directive)分为全局注册和局部注册，然后在模块中直接使用。
         提供了几种钩子函数: bind  绑定元素时调用，执行一次
-                        inserted（in舍提的）  被绑定的元素，插入到父节点的dom时调用
+                        inserted  被绑定的元素，插入到父节点的dom时调用
                         update 更新、unbind 解绑，执行一次、
                         componentUpdated 组件与子组件更新时调用
         除update 与 componentUpdated 钩子函数之外，每个钩子函数都含有 el、binding、vnode 这三个参数
@@ -946,11 +949,11 @@
 /*
         .sync 可以实现子组件与父组件的双向绑定，并且可以实现子组件同步修改父组件的值。
         .stop 阻止事件继续传播
-        .prevent（破万特） 阻止标签默认行为
+        .prevent 阻止标签默认行为
         .capture 使用事件捕获模式,即元素自身触发的事件先在此处处理，然后才交由内部元素进行处理
         .self 只当在 event.target 是当前元素自身时触发处理函数
         .once 事件将只会触发一次
-        .passive（帕射服） 告诉浏览器你不想阻止事件的默认行为
+        .passive 告诉浏览器你不想阻止事件的默认行为
 
         除此还有v-model事件和键盘事件修饰符
 */
@@ -1110,7 +1113,7 @@
 */
 //?  90，assets和static的区别
 /*
-        都是放静态资源 assets（阿撒s）打包压缩 static不压缩
+        都是放静态资源 assets 打包压缩 static不压缩
 */
 //?  91，vue核心
 /*
@@ -1122,7 +1125,7 @@
         abort()方法    实例: let aj = null; aj = $ajax({...})   中断 aj.abort()
 
         axios中断请求
-        CancelToken（肯嗖偷根）构造函数创建取消函数cancel，直接调用cancel取消函数即可
+        CancelToken 构造函数创建取消函数cancel，直接调用cancel取消函数即可
 */
 //?  93，自定义组件的v-model
 /*
@@ -1153,7 +1156,7 @@
 //?  96，回流重绘
 /*
         定义：回流必将引起重绘，而重绘不一定会引起回流
-        优化：css透明度尽量使用 opacity 代替 visiability 
+        优化：css透明度尽量使用 opacity 代替 visiability
         优化：若需要 js 控制 css ，建议提前写一个 class 而不是 style 修改 避免多次重绘
         优化：使用 translate 代替 top ，translate 不会引起回流
 

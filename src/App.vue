@@ -55,14 +55,13 @@ try {
 const themeColor = localStorage.getItem('themeColor')
 document.documentElement.style.setProperty('--vt-c-white', themeColor);
 document.documentElement.style.setProperty('--vt-c-black', themeColor === '#1E1E1E' ? 'rgba(255, 255, 255, .87)' : '#1E1E1E');
-
 document.documentElement.style.setProperty('--position-center', localStorage.getItem('guidePosition'));
 
 setTimeout(() => {
   document.querySelector('body').style.setProperty('transition', 'color 0.3s, background-color 0.5s');
 }, 0);
 
-console.log('半颗牙此晒太阳');
+console.log('半颗牙齿晒太阳');
 
 </script>
 

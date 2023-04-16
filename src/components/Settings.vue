@@ -47,12 +47,12 @@ const createTip = (className) => {
   }
   try {
 
-    navigator.clipboard?.writeText && navigator.clipboard.writeText('0571-28187666')
+    // navigator.clipboard?.writeText && navigator.clipboard.writeText('0571-28187666')
 
     let tipsTxt = {
       '.i1': '主题切换',
       '.i2': '手风琴模式',
-      '.i3': '展开折叠（bug）',
+      '.i3': '展开折叠',
       '.i4': '索引位置切换',
     }
 
@@ -62,7 +62,7 @@ const createTip = (className) => {
 
     slideHint(className, false)
 
-    console.error('复制错误 => ', e)
+    console.error('错误 => ', e)
   }
 }
 </script>

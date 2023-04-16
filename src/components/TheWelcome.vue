@@ -11,45 +11,57 @@ defineProps({
   }
 })
 
-emitter.on("accordion", (res) => {
-  if (!accordion.value) switchList.value = false
-  accordion.value = !accordion.value
-
-})
-emitter.on("switchList", (res) => {
-  accordion.value = false
-  switchList.value = !switchList.value
-})
 
 const switchList = ref(false)
 
 const accordion = ref(true)
 
-const heightObj = { activity: null }
+let heightObj = { activity: null }
 
-const txtDom = ref()
+const txtDoms = ref()
 
 const fold = (i) => {
 
-  const h = txtDom.value[i].scrollHeight
+  const h = txtDoms.value[i].scrollHeight
 
   heightObj[i] = heightObj[i] === undefined ? (accordion.value ? h : (switchList.value ? 0 : h)) : heightObj[i] === h ? 0 : h
-
+  
   if (accordion.value) {
     for (const key in heightObj) {
       if (key === 'activity') heightObj.activity = heightObj.activity === i ? null : i
-      else txtDom.value[key].style.height = 0 + 'px'
+      else txtDoms.value[key].style.height = 0 + 'px'
     }
     setTimeout(() => {
-      txtDom.value[i].style.height = (heightObj.activity === i ? h : 0) + 'px'
+      txtDoms.value[i].style.height = (heightObj.activity === i ? h : 0) + 'px'
     }, 10);
   } else {
-    txtDom.value[i].style.height = (switchList.value ? h : 0) + 'px'
+    txtDoms.value[i].style.height = (switchList.value ? h : 0) + 'px'
     setTimeout(() => {
-      txtDom.value[i].style.height = heightObj[i] + 'px'
+      txtDoms.value[i].style.height = heightObj[i] + 'px'
     }, 10);
   }
 
+}
+
+emitter.on("accordion", (res) => {
+  if (accordion.value) return
+  accordion.value = !accordion.value
+  if (switchList.value || Object.keys(heightObj).length !== 1) switchListFn(true)
+})
+emitter.on("switchList", (res) => {
+  accordion.value = false
+  switchListFn()
+})
+
+const switchListFn = (status = false) => {
+  let contentDoms = document.getElementsByClassName('contentTxt')
+
+  for (let i = 0; i < contentDoms.length; i++) {
+    contentDoms[i].style.height = switchList.value || status ? 0 : txtDoms.value[i].scrollHeight + 'px'
+  }
+
+  switchList.value = status ? false : !switchList.value
+  heightObj = { activity: null }
 }
 </script>
 
@@ -58,10 +70,10 @@ const fold = (i) => {
     <i @click="fold(index)">{{ index + 1 }}</i>
     <div class="details">
       <h3 v-html="item.name" @click="fold(index)"></h3>
-      <div v-html="`<pre>${item.value}</pre>`" :class="[switchList ? 'openTxt' : 'closeTxt']" ref="txtDom"></div>
+      <div v-html="`<pre>${item.value}</pre>`" :class="[switchList ? 'openTxt' : 'closeTxt', 'contentTxt']" ref="txtDoms"></div>
     </div>
   </div>
-</template>
+</template >
 <style>
 pre {
   white-space: pre-wrap;
@@ -102,6 +114,7 @@ h3 span {
   margin-left: calc(var(--section-gap) / 2);
 }
 .openTxt {
+  height: auto;
   transition: all 0.4s;
   overflow: hidden;
 }
