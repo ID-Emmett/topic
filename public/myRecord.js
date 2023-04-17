@@ -485,7 +485,7 @@
 */
 //?  34，history与hash
 /*
-        主要是history刷新会丢失页面，需要进行nginx路由配置
+        主要是history刷新会丢失页面，需要进行nginx路由配置， 微信web界面开发不能使用history
         hash: 特点是url带有# 后面hash值发生变化并不会导致浏览器发送请求，也就不会刷新页面
               每次hash值的变化都会触发hashchange事件，所以可以监听这个事件实现更新页面部分内容
         history: 14年html5推出的API，它可以使用pushState()方法记录操作历史，监听popstate事件来监听到状态变更；
@@ -1170,4 +1170,4 @@
         promise 手动控制更方便, 适合单独控制，但是多个 promise 写起来麻烦,太多 .then();
         await 适合批量处理一系列动作,在 async 函数里，依次 await 就行;
 */
-// todo  diff 继承  new map()   mvc/mvvm  rem  Pinia
+// todo  diff 继承  new map()   mvc/mvvm  rem  Pinia  事件模型（目标事件） 30个请求怎么处理  BFC  语法错误，参数错误还有哪些  埋点 迭代器 发电机函数应用 寄生组合继承 class  this  js预编译过程  微服务 web3 postMessage 单点登录  css 预解析 

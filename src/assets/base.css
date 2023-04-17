@@ -1,6 +1,6 @@
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
-  --vt-c-black: #1E1E1E;
+  --vt-c-black: #1e1e1e;
   --vt-c-white: #ffffff;
 
   --vt-c-white-soft: #f8f8f8;
@@ -39,6 +39,10 @@
   --section-gap: 160px;
 
   --position-center: calc(50% - 32px);
+
+  --background-size: "0px";
+
+  --scrollbar-background: #e4974f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -65,7 +69,6 @@
 }
 
 body {
-  /* max-height: 100vh; */
   color: var(--color-text);
   background: var(--color-background);
   transition: color 0s, background-color 0s;
@@ -77,13 +80,22 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-image: url(./images/mirrored-squares.png);
+  /* filter: brightness(1); */
+  background-size: var(--background-size);
+  background-blend-mode: normal;
+  background-attachment: fixed;
+  background-repeat: repeat;
+  overflow-y: auto;
 }
 
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #e4974f;
+  background: var(--scrollbar-background);
+  transition: background .4s;
   border: none;
   border-radius: 10px;
 }

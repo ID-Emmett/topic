@@ -1,11 +1,11 @@
-@import './base.css';
+@import "./base.css";
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
   padding: 2rem;
-
   font-weight: normal;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 a,
@@ -28,8 +28,8 @@ a,
   }
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* display: grid;
+    grid-template-columns: 1fr 1fr; */
     padding: 0 2rem;
   }
 }
