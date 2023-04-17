@@ -59,6 +59,7 @@ const switchListFn = (status = false) => {
   for (let i = 0; i < contentDoms.length; i++) {
     contentDoms[i].style.height = switchList.value || status ? 0 : txtDoms.value[i].scrollHeight + 'px'
   }
+  contentDoms = null
 
   switchList.value = status ? false : !switchList.value
   heightObj = { activity: null }
@@ -84,9 +85,9 @@ const switchListFn = (status = false) => {
   flex: 1;
   margin-left: calc(var(--section-gap) / 4);
 }
-.details-title{
+.details-title {
   opacity: 1;
-  transition: opacity .4s;
+  transition: opacity 0.4s;
 }
 .openTxt {
   height: auto;

@@ -70,16 +70,18 @@ let countdownClock = null
 let clock = null
 let responders = null
 
-const automationFn = (() => {
-  let contentDoms = document.getElementsByClassName('contentTxt')
+let treeLen = ref(0)
 
+const automationFn = (() => {
+
+  treeLen.value = treeLen.value || document.getElementsByClassName('contentTxt').length
 
   // return setTop(90)
 
   let randomVal = null
 
   function creatdRandom (oldVal) {
-    let newVal = Math.floor(Math.random() * (contentDoms.length - 0 + 1) + 0)
+    let newVal = Math.floor(Math.random() * (treeLen.value - 0 + 1) + 0)
     if (newVal === oldVal) return creatdRandom(oldVal)
     randomVal = newVal
     return newVal
@@ -121,13 +123,13 @@ const setTop = ((randomTopic) => {
 
   countdownClockFn()
 
-  const targetDom = document.getElementById(randomTopic)
-  const parent = document.getElementById('main')
+  let targetDom = document.getElementById(randomTopic)
+  let parent = document.getElementById('main')
 
-  const allClientHeight = document.body.clientHeight
-  const showClientHeight = window.innerHeight
-  const scrollTop = document.documentElement.scrollTop
-  const targetVal = targetDom.offsetParent.offsetParent.offsetTop
+  let allClientHeight = document.body.clientHeight
+  let showClientHeight = window.innerHeight
+  let scrollTop = document.documentElement.scrollTop
+  let targetVal = targetDom.offsetParent.offsetParent.offsetTop
 
   // console.log('总高度', allClientHeight)
   // console.log('可视高度', showClientHeight)
@@ -144,21 +146,26 @@ const setTop = ((randomTopic) => {
     window.location.hash = "#" + randomTopic
     setTimeout(() => {
       parent.style.transition = 'transform 2s'
-      const clientRectTop = document.getElementById(randomTopic).getBoundingClientRect().top
+      let clientRectTop = document.getElementById(randomTopic).getBoundingClientRect().top
 
       if (clientRectTop + targetDom.parentNode.scrollHeight > showClientHeight || (showClientHeight + targetVal > allClientHeight)) {
 
         if (targetDom.parentNode.scrollHeight > showClientHeight) return
-        setTimeout(() => {
-          if (targetDom.parentNode.scrollHeight < 0) parent.style.transform = `translateY(${targetDom.parentNode.scrollHeight})`
-
-        }, 2000);
-        parent.style.transform = `translateY(-${clientRectTop + targetDom.parentNode.scrollHeight - showClientHeight + 20}px)`
+        // setTimeout(() => {
+        //   if (targetDom.parentNode.scrollHeight < 0) parent.style.transform = `translateY(${targetDom.parentNode.scrollHeight})`
+        // }, 2000);
+        parent.style.transform = `translateY(-${clientRectTop + targetDom.parentNode.scrollHeight - showClientHeight}px)`
       } else {
-
         parent.style.transform = `translateY(${(showClientHeight - targetDom.parentNode.scrollHeight) / 2}px)`
-
       }
+
+      targetDom = null
+      parent = null
+      allClientHeight = null
+      showClientHeight = null
+      scrollTop = null
+      targetVal = null
+      clientRectTop = null
 
     }, 1000);
     targetDom.click('randomTopic')
@@ -167,7 +174,6 @@ const setTop = ((randomTopic) => {
 })
 
 const changeAutoBrush = (className => {
-
   createTip(className, true, false, '#409eff', 2100)
   openBrushModal.value = !openBrushModal.value
   if (openBrushModal.value) nextTick(() => document.getElementById('inputTime').focus())
