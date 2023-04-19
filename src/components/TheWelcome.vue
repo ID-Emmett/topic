@@ -64,6 +64,16 @@ const switchListFn = (status = false) => {
   switchList.value = status ? false : !switchList.value
   heightObj = { activity: null }
 }
+
+const pauseStatus = ref(false)
+
+emitter.on("pauseStatus", (status) => {
+  pauseStatus.value = status
+})
+const enter = (() => {
+  if (pauseStatus.value) document.getElementsByClassName('i7')[0].click()
+})
+
 </script>
 
 <template>
@@ -71,7 +81,14 @@ const switchListFn = (status = false) => {
     <i @click="fold(index)">{{ index + 1 }}</i>
     <div class="details">
       <h3 v-html="item.name" @click="fold(index)" :id="`target${index}`" class="details-title"></h3>
-      <div v-html="`<pre>${item.value}</pre>`" :class="[switchList ? 'openTxt' : 'closeTxt', 'contentTxt']" ref="txtDoms"></div>
+      <div
+        ref="txtDoms"
+        :class="[switchList ? 'openTxt' : 'closeTxt', 'contentTxt']"
+        @mouseenter="enter()"
+        @mouseleave="enter()"
+      >
+        <pre v-html="item.value"></pre>
+      </div>
     </div>
   </div>
 </template >
@@ -170,7 +187,7 @@ h3 {
   *white-space: normal;
   text-align: start;
   width: inherit;
-  padding: 4rem 0 6rem 0 !important;
+  padding: 2rem 0 6rem 0 !important;
   font-size: 1.1rem;
   color: var(--vt-c-black);
   transition: color 0.5s;
@@ -178,13 +195,10 @@ h3 {
   line-height: 2rem;
 }
 :deep() pre span {
-  color: #e6a23c;
   color: #67c23a;
   letter-spacing: 0.021em;
 }
 :deep() h3 span {
-  color: #409eff;
-  color: #f56c6c;
   color: #6483a1;
   letter-spacing: 0.021em;
 }
