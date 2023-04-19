@@ -300,8 +300,11 @@
 //?  21，BFC
 /*
         简述: 块级格式化上下文，可以理解为一个独立的盒子，盒子内容与外界毫不相干。
-        触发条件: 元素设定绝对或固定定位，overflow不为visible，float不为none,display:flex或inline-black
-        作用: 1,最常用的就是清除浮动，设定父元素，overflow:hidden; 2,避免margin重叠(同一BFC中元素margin会重叠)
+        触发条件: 元素设定绝对或固定定位，overflow不为visible，float不为none, display:flex或inline-black等
+        作用:
+                1,最常用的就是清除浮动，设定父元素，overflow:hidden;
+                2,避免margin重叠(同一BFC中元素margin会重叠)
+                3,阻止元素被浮动元素覆盖，被影响的元素设定overflow: hidden;
         缺点: 会引起重排,消耗性能?
 */
 //?  22，ECharts
@@ -473,6 +476,11 @@
 
         then也有两个回调，成功与失败的回调，失败后会进入失败回调，若定义了catch则最终进入catch
         catch也会像then一样返回一个promise对象，并且是成功状态，所以，catch后面若是有then 也会执行。所以一般catch放最后
+        Promise.allSettled  需要执行多个平行和独立的异步操作并收集所有结果时非常有效，即使某些异步操作可能失败
+                与 all()的区别：
+                   all()返回一个直接包裹resolve内容的数组，而allSettled()返回一个包裹着对象的数组。
+                   all()一个错则全错，allSettled()可以继续使用成功的数据
+
         Promise.catch  捕获异常
         Promise.then .then和.catch 的参数期望是函数，传入非函数则会发生值穿透。（值为最初的）
                         一定要return结果（同步）或新的promise对象（异步任务时使用）才能让之后的then回调接收
@@ -674,7 +682,24 @@
         导航守卫就是路由守卫，判断是否有权限访问，axios拦截器就是发送请求判断token的有效性。
         一起使用确保登录状态。
 */
-//?  49，express
+//?  49，css引入
+/* 
+        1. 导入式    @import"mystyle.css";
+
+                        会在整个网页装载完后再装载CSS文件,可能导致闪烁白屏
+
+        2. 链接式    <link rel="stylesheet" type="text/css" href="my.css"/>
+
+                        最能体现DIV+CSS中的内容与显示分离的思想，也最易改版维护，代码看起来也是最美观的一种。
+
+        3. 行内式    <span style="color:red">信息</span>
+            
+                        难看，不利于维护，不可复用
+                
+        4. 内嵌式    <style type="text/css"> div{color:blue} </style>
+
+                        门户网站使用较多，优点：速度快  缺点：在单个页面中，会臃肿 维护也麻烦
+*/
 //?  50，内存泄漏
 /*
         程序不再需要的或无法访问到的变量没有回收仍然占据着内存则导致了内存泄漏
@@ -1087,7 +1112,7 @@
 
                         缺陷：
                                 属性共享，私有属性和方法子类是不能访问的
-                                （不能传参）：父类所有的引用类型属性都会被实例出来的对象共享，所以修改一个实例对象的引用类型属性，会导致所有实例对象受到影响
+                                不能传参：父类所有的引用类型属性都会被实例出来的对象共享，所以修改一个实例对象的引用类型属性，会导致所有实例对象受到影响
                                 实例化时，不能传参数
 
         2，构造函数继承：
@@ -1137,7 +1162,8 @@
                         缺点：
                                 不能传参数
         6，寄生组合继承：
-                        利用原型链继承，实现实例对父类原型（​​Animal.prototype​​​）方法与属性的继承；利用借用构造函数继承，实现实例对父类构造函数（​​function Animal() {}​​）里方法与属性的继承，并且解决了组合继承带来的缺陷
+                        利用原型链继承，实现实例对父类原型（​​Animal.prototype​​​）方法与属性的继承；
+                        利用借用构造函数继承，实现实例对父类构造函数（​​function Animal() {}​​）里方法与属性的继承，并且解决了组合继承带来的缺陷
 
         7,class
                         使用 extends 与 super 实现继承
@@ -1262,9 +1288,196 @@
                 根据获取到的设备宽度，动态修改根元素的font-size值
 
 */
-//?   事件模型
+//?  100，事件模型
 /*
+        1，事件流：都会经历三个阶段
+                事件捕获阶段(capture phase)
+                处于目标阶段(target phase)
+                事件冒泡阶段(bubbing phase)
+
+        2，事件模型可以分为三种：
+                原始事件模型(DOM0级)
+                        特点：原始事件模型中，事件发生后没有传播的概念，没有事件流。事件发生，立即处理。
+                        缺点： a、逻辑与显示没有分离。
+                              b、相同事件的监听函数只能绑定一个，后绑定的会覆盖掉前面的。
+                              c、无法通过事件的冒泡、委托等机制等。
+
+                标准事件模型(DOM2级)
+                        会进行事件流的三个阶段。
+
+                IE事件模型(基本不用)
+                        特点：IE是将event对象在处理函数中设为window的属性，一旦函数执行结束，便被置为null。
+                        缺点：只能IE自己用，太高冷了。IE中不支持事件捕获，只有事件冒泡。
 
 */
+//?  101，JavaScript错误类型
+/*
+        1，SyntaxError    语法错误
+        2，TypeError      类型错误
+        3，ReferenceError 引用错误
+                （当找不到变量的引用、在变量作用域范围之外使用变量、使用未声明的变量时、在暂时性死区期间使用变量时都会抛出此错误。）
+        4，RangeError     范围错误
+                （将变量设置在其限定的范围之外、将值传递给超出范围的方法、调用一个不会结束的递归函数时就会抛出此错误。）
+        5，URIError       URI 错误
+        6，EvalError      Eval 错误
+                当 eval() 函数调用发生错误时，会抛出 EvalError。当前ECMAScript不再抛错
+        7，InternalError  内部错误
+                当 JavaScript 引擎上的工作负载突然激增时，会抛出此错误。
+                当有太多数据需要处理时，工作量就会激增，比如函数调用包含过多的递归或者过多的switch case时。
+*/
+//?  102，埋点
+/*
+        又称为事件追踪，指的是针对特定用户行为或事件进行捕获，处理和发送的相关技术及其实施过程。（收集用户数据进行分析）
+*/
+//?  103，迭代器
+/*
+        迭代就是指可以从一个数据集中按照一定的顺序，不断取出数据的过程。
+        迭代与遍历的区别
+                迭代强调依次取数据的过程，不保证把所有的数据都取完
+                遍历强调的是要把所有的数据依次全部取出
 
-// todo  Pinia  事件模型（目标事件） 30个请求怎么处理  BFC  语法错误，参数错误还有哪些  埋点 迭代器 发电机函数应用 寄生组合继承 class  this  js预编译过程  微服务 web3 postMessage 单点登录  css 预解析 
+        通过可迭代对象中的迭代器工厂函数 Symbol.iterator来生成迭代器。
+                const arr = [1, 2, 3, undefined]
+
+                const iter1 = arr[Symbol.iterator]()   // 通过迭代器工厂函数` Symbol.iterator`来生成迭代器。
+                console.log(iter1)
+
+                console.log(iter1.next())
+                console.log(iter1.next())
+                console.log(iter1.next())
+                console.log(iter1.next())
+                console.log(iter1.next())
+        输出：
+                Array Iterator {}
+                {value: 1, done: false}
+                {value: 2, done: false}
+                {value: 3, done: false}
+                {value: undefined, done: false}
+                {value: undefined, done: true}
+
+        使用next()可以按照顺序取值
+*/
+//?  104，Generator（发电机函数）
+/*
+        function关键字与函数名之间有一个星号 “*” （推荐紧挨着function关键字）
+        函数体内使用 yield 表达式，定义不同的内部状态 （可以有多个yield）
+        直接调用 Generator函数并不会执行，也不会返回运行结果，而是返回一个遍历器对象（Iterator Object）
+        依次调用遍历器对象的next方法，遍历 Generator函数内部的每一个状态
+
+        应用场景：人头抽奖，实现长轮询等
+*/
+//?  105，this
+/*
+        特点：
+                this永远指向一个对象；
+                this的指向完全取决于函数调用的位置；
+                函数中的this只能在运行时才能最终确定运行环境。
+
+        1. 作为普通函数在全局环境中被调用
+                在全局环境里面，this 永远指向 window，因此在全局环境里作为普通函数被调用的时候，this 也是指向 window。(!node)
+
+        2.作为对象的属性被调用
+                如果函数作为一个对象的属性方法，并且被调用的时候，this 就指向这个对象。
+
+        3. 作为构造函数被调用
+                作为构造函数被调用的时候，this 代表它即将 new 出来的对象。
+
+        4. 作为 call/apply/bind 方法的调用
+                作为 call/apply/bind 方法被调用的时候指向传入的值
+
+        5. 严格模式下面
+                在严格模式下，在全局环境中执行函数调用的时候 this 并不会指向 window 而是会指向 undefined
+
+        6. setTimeout、setInterval中的this
+                setTimeout/setInterval 执行的时候，this 默认指向 window 对象，除非手动改变 this 的指向。
+
+        7. 构造函数 prototype 属性
+                在 Person.prototype.sayName 函数中，this 指向的 person 对象。即便是在整个原型链中,this 也代表当前对象的值。
+        
+        8. Eval函数
+                在 Eval 中，this 指向当前作用域的对象。   
+
+        9. 箭头函数
+                箭头函数里面 this 始终指向外部对象，因为箭头函数没有 this，因此它自身不能进行new实例化，
+                同时也不能使用 call, apply, bind 等方法来改变 this 的指向。
+*/
+//?  106，js预编译
+/* 
+        运行三部曲
+                语法分析：   
+                        引擎检查代码是否存在基本的的语法错误
+                预编译：     
+                        预编的时候会生成AO (Activetion Object,执行期上下文)和GO (Global Object,等于window)
+
+                        内存中开辟一些空间，存放一些变量与函数 
+                        变量声明会被提升，但是变量的赋值不会被提升
+                        函数声明会被提升，但是函数表达式不会被提升
+                        在同一个作用域中，变量名不能重复声明。
+                解释执行：   
+                        执行代码，解释一行执行一行，一旦出错立即停止执行。
+
+*/
+//?   107，微前端
+/* 
+        将庞大的整体拆成可控的小块，并明确它们之间的依赖关系。关键优势在于：
+                代码库更小，更内聚、可维护性更高
+                松耦合、自治的团队可扩展性更好
+                渐进地升级、更新甚至重写部分前端功能成为了可能
+
+*/
+//?  108，postMessage
+/* 
+        使用window.postMessage方法实现跨域通信，可以在不同窗口之间传递数据，从而实现跨域请求。
+        但是这种方式需要在客户端和服务器端同时进行处理，并且存在一些安全问题。
+
+        父窗口通过iframe嵌套子窗口，父窗口获取子窗口的窗口对象，然后发送数据：iframeWin.postMessage('数据..',子窗口url)
+        子窗口接收数据 window.addEventListener("message", function( event ) {console.log(event.data)}) // 数据..
+*/
+//?  109，单点登录
+/* 
+        在同一帐号平台下的多个应用系统中，用户只需登录一次，即可访问所有相互信任的应用系统。
+        例如：在百度平台登录后，打开谷歌平台，谷歌能够正常使用百度的Session ID （或 Token ）进行数据请求，实现单点登录
+
+        LocalStorage 跨域的实现方式：
+
+                1.前端在每次向后端发送请求时，主动将 LocalStorage 的数据传递给服务端
+                2.后端需要做的仅仅是在用户登录成功后，将 Session ID （或 Token ）放在响应体中传递给前端。
+                3.前端拿到 Session ID （或 Token ）后，除了将它写入自己的 LocalStorage 中之外，
+                  还可以通过特殊手段将它写入多个其他域下的 LocalStorage 中。
+                  
+                  实现原理：1.在A平台中，创建一个不可见的iframe  let iframe = document.createElement("iframe");
+                           2.iframe加载跨域HTML（B平台）  iframe.src = "http://B.com/proxy.html";
+                           3.使用postMessage跨域传值    iframe.contentWindow.postMessage(token, "http://B.com");
+                           4.移除 iframe.remove();
+
+                4.在这个iframe所加载的HTML中绑定一个事件监听器，当事件被触发时，把接收到的token数据写入localStorage
+                  window.addEventListener('message', function (event) {
+                        localStorage.setItem('token', event.data)
+                  }, false);
+                
+        通过 iframe+postMessage() 方式，将同一份 Token 写入到了多个域下的 LocalStorage 中，
+        每次在向后端发送请求之前，都会主动从 LocalStorage 中读取 Token 并在请求中携带，
+        这样就实现了同一份 Token 被多个域所共享。
+
+        在创建iframe时，正确判断B窗口创建成功
+        A窗口打开B窗口，当B窗口加载后，B窗口就会postMessage给A窗口一个信息，当A窗口收到信息之后再postMessage给B窗口信息(token)
+
+        // A: A.html
+        let token = 'token值'
+        const iframe = document.createElement("iframe");
+        iframe.src = "http://B.com/proxy.html";
+        window.addEventListener("message", (e) => {
+                if(e.origin === "http://B.com") {
+                        iframe.contentWindow.postMessage(token, "http://B.com");
+                        iframe.remove();
+                }
+        }) 
+        // B: proxy.html
+        const opener = window.opener
+        opener.postMessage(msg, "http://A.com")
+        window.addEventListener("message", (e) => {
+                localStorage.setItem('token', e.data)
+        })
+*/
+
+// todo       
