@@ -61,18 +61,10 @@ setTimeout(() => {
   document.querySelector('body').style.setProperty('transition', 'color 0.3s, background-color 0.5s');
 }, 0);
 
-console.log("%c+",
-  `font-size: 1px;
-  padding: 10px 10px;
-  background-image: url(https://id-emmett.github.io/topic/favicon.ico);
-  background-size: contain;
-  background-repeat: no-repeat;
-  color: transparent;`);
 
 console.log('%c\n半颗牙齿晒太阳\n', 'color: #43bb88;font-size: 40px;font-weight: bold;');
 
 console.log("%c\n\n地址->持续更新请点stars： https://github.com/ID-Emmett/topic \n\n", "color:#409eff;font-weight:bolder;font-size:15px")
-
 
 setTimeout(() => {
   console.log('%c\n自动刷题建议开启手风琴模式\n', 'color: #E6A23C;font-size: 13px;font-weight: bold;')

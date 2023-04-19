@@ -1339,7 +1339,7 @@
         通过可迭代对象中的迭代器工厂函数 Symbol.iterator来生成迭代器。
                 const arr = [1, 2, 3, undefined]
 
-                const iter1 = arr[Symbol.iterator]()   // 通过迭代器工厂函数` Symbol.iterator`来生成迭代器。
+                const iter1 = arr[Symbol.iterator]()   // 通过迭代器工厂函数 Symbol.iterator 来生成迭代器。
                 console.log(iter1)
 
                 console.log(iter1.next())
@@ -1417,7 +1417,7 @@
                         执行代码，解释一行执行一行，一旦出错立即停止执行。
 
 */
-//?   107，微前端
+//?  107，微前端
 /* 
         将庞大的整体拆成可控的小块，并明确它们之间的依赖关系。关键优势在于：
                 代码库更小，更内聚、可维护性更高
@@ -1474,7 +1474,7 @@
         }) 
         // B: proxy.html
         const opener = window.opener
-        opener.postMessage(msg, "http://A.com")
+        opener.postMessage("ready", "http://A.com")
         window.addEventListener("message", (e) => {
                 localStorage.setItem('token', e.data)
         })
