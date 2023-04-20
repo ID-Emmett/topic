@@ -21,21 +21,39 @@
 */
 //?  2，Vue2与Vue3
 /*
-        1，vue3模板支持多标签
-        2，compostionAPI取代OptionsAPI    老版本ts支持有限，因为有幕后操作，代码阻止逻辑差，可复用差
-        3，瞬移组件
-        4，不再打包到没用的模块
-        5，对ts更好的支持
-        6，性能更好，数据双向绑定使用proxy取代Object.definePropert
+        1.性能提升：Vue 3在内部进行了大量的优化，包括编译器、渲染器、响应式系统和虚拟DOM等方面，使得性能提升了约1.5倍。
+
+        2.Composition API：Vue 3引入了Composition API，它是一种新的组件编写方式，可以更好地组织和复用组件逻辑。Composition API更加灵活和可组合。
+
+        3.更好的TypeScript支持：Vue 3提供了更好的TypeScript支持，包括类型推断、类型声明和类型提示等方面。这使得在Vue 3中使用TypeScript更加方便和可靠。
+
+        4.更好的Tree-shaking支持：Vue 3对Tree-shaking的支持更加完善，可以更好地优化打包体积。
+
+        5.更好的响应式系统：Vue 3的响应式系统进行了大幅度的改进，使得更加高效和可靠。例如，Vue 3可以更好地处理嵌套对象和数组的响应式更新。（proxy）
+
+        6.更好的错误处理：Vue 3引入了全新的错误处理机制，可以更好地捕获和处理错误，提高了应用程序的可靠性和健壮性。
 */
 //?  3，Vue与React
 /*
-        1，模板编写的区别，vue写的是近似常规HTML，react有专门的jsx语法。
-        2，vue2底层重写了八个数组方法
-        3，react单项数据流，vue数据响应式，react的优化需要手动，vue自动，问题是若是vue的state过多，
-                watcher也会很多会导致卡顿，所以大型应用使用react更加可控。
-        4，类式组件的写法和声名式的写法
-        5，dom的更新策略不同。react 会自顶向下全diff，vue会跟踪每一个组件的依赖关系,不需要重新渲染整个组件树
+        1.组件化：Vue和React都支持组件化开发，但Vue的组件化更加直观和简单，而React的组件化更加灵活和可扩展。
+
+        2.模板语法：Vue使用模板语法来描述组件的结构和行为，而React则使用JSX语法，这使得React更加灵活和可编程。
+
+        3.响应式系统：Vue的响应式系统使用了Object.defineProperty实现，而React则使用了单向数据流的思想，这使得Vue的响应式系统更加简单和直观。
+
+        4.状态管理：Vue使用Vuex来管理应用程序的状态，而React则使用了Redux或者Context API，这使得React的状态管理更加灵活和可扩展。
+
+        5.渲染方式：Vue使用模板和虚拟DOM来进行渲染，而React则使用JSX和虚拟DOM来进行渲染，这使得React的渲染更加灵活和可编程。
+
+        6.学习曲线：Vue相对于React来说，学习曲线较为平缓，上手更加容易，但React的灵活性和可扩展性更高，需要花费更多的时间和精力来掌握。
+
+        Vue3与React
+
+        1.响应式系统：Vue 3的响应式系统使用了Proxy实现，而React则使用了单向数据流的思想，这使得Vue 3的响应式系统更加高效和灵活。
+
+        2.Composition API：可以更好地组织和复用组件逻辑。而React没有类似的API，需要使用Hooks来实现类似的功能。
+
+        3.渲染方式：Vue 3使用模板和虚拟DOM来进行渲染，而React则使用JSX和虚拟DOM来进行渲染，这使得React的渲染更加灵活和可编程。
 */
 //?  4，Vue双向绑定(响应式)
 /*
@@ -1446,9 +1464,10 @@
                   还可以通过特殊手段将它写入多个其他域下的 LocalStorage 中。
                   
                   实现原理：1.在A平台中，创建一个不可见的iframe  let iframe = document.createElement("iframe");
-                           2.iframe加载跨域HTML（B平台）  iframe.src = "http://B.com/proxy.html";
-                           3.使用postMessage跨域传值    iframe.contentWindow.postMessage(token, "http://B.com");
-                           4.移除 iframe.remove();
+                           2.iframe加载跨域HTML（B平台）  iframe.src = "http://B.com";
+                           3.挂载到文档中  document.body.append(iframe);
+                           4.使用postMessage跨域传值    iframe.contentWindow.postMessage(token, "http://B.com");
+                           5.移除 iframe.remove();
 
                 4.在这个iframe所加载的HTML中绑定一个事件监听器，当事件被触发时，把接收到的token数据写入localStorage
                   window.addEventListener('message', function (event) {
@@ -1465,19 +1484,24 @@
         // A: A.html
         let token = 'token值'
         const iframe = document.createElement("iframe");
-        iframe.src = "http://B.com/proxy.html";
+        iframe.src = "http://B.com";
+        document.body.append(iframe);
+
         window.addEventListener("message", (e) => {
-                if(e.origin === "http://B.com") {
+                if (e.origin === "http://B.com") {
                         iframe.contentWindow.postMessage(token, "http://B.com");
-                        iframe.remove();
+                        setTimeout(() => iframe.remove(), 1000); // 清除 iframe dom 必须延时
                 }
-        }) 
-        // B: proxy.html
-        const opener = window.opener
-        opener.postMessage("ready", "http://A.com")
-        window.addEventListener("message", (e) => {
-                localStorage.setItem('token', e.data)
-        })
+        }, false)
+        // B: B.html
+        window.parent.postMessage("ready", "http://A.com")
+
+        window.onmessage = ((event) => {
+                if (!event.data || typeof event.data === 'object') return
+                localStorage.setItem('token', event.data)
+        });
+
+        说明与演示 知乎：https://www.zhihu.com/question/596600183/answer/2991694948
 */
 
-// todo       
+// todo     vue3    webpack    前端工程化
