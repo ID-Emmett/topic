@@ -191,6 +191,9 @@
         9、修饰器       语法糖，用于修改类的行为
         10、class      类的继承，一个语法糖，让代码看起来更像面向对象的写法 es5 的继承是通过原型或者是构造函数机制来实现，
                         class里面有构造方法，类之间通过 extends 关键字实现，子类必须在 constructor 方法中调用 super 方法。
+                        # 私有属性与私有方法，只能在类的内部访问，外部不能访问，子类不能继承且无法直接调用。
+                        static 父类的静态属性/方法，可以被子类继承。如果静态方法包含this关键字，这个this指的是类，而不是实例,
+                        类可以直接调用,但是类的实例不能继承与调用。
         11、promise    promise是同步，then是异步
         12、symbol     基本数据类型、唯一值、可用作对象的key
         13、proxy      代理   监听对象的操作，做一些相应的操作
@@ -568,7 +571,7 @@
         性能分析  window.performance.timing
                 主要性能指标 DNS查询耗时、request请求耗时、解析dom树耗时、白屏时间
 
-        有三个部分  1，代码层优化
+        有三个部分       1，代码层优化
                                 正确区分v-if和show使用场景。computed和watch场景
                                 v-for添加key且同时避免使用v-if，使用key能使diff更快速准确的区分，v-for优先级比if快
                                 vue组件销毁时销毁事件，定时器等。
@@ -577,10 +580,11 @@
                                 路由懒加载
                                 第三方插件按需引入
                                 优化长列表，上拉加载
-                                2，webpack配置层优化
+
+                        2，webpack配置层优化
                                 对图片进行压缩
 
-                                3，基础的web技术层优化
+                        3，基础的web技术层优化
                                 开启gzip压缩
                                 浏览器静态资源缓存
                                 cnd 通过不同的域名来加载文件，从而使下载文件并发连接数大大增加
@@ -950,11 +954,17 @@
 */
 //?  66，flex
 /*
-        flex-direction 排列方向
-        flex-wrap 是否换行
-        flex-flow 前两简写模式
-        justify-content 主轴对其方式
-        align-item 交叉轴对齐方式
+        flex-direction:  排列方向
+        flex-wrap:       是否换行
+        flex-flow:       前两简写模式
+        justify-content: 主轴对其方式
+        align-items:     交叉轴对齐方式
+        align-content:   多根轴线上的对齐方式
+        order:           项目排序
+        flex-grow:       项目放大比例
+        flex-shrink:     项目缩小比例
+        flex-basis:      项目占据主轴空间
+        align-self:      项目交叉轴上的对齐方式
 */
 //?  67，Vue数据侦测
 /*
@@ -1599,21 +1609,11 @@
         当用户与视图进行交互时，例如输入表单数据或点击按钮，
         Vue 会自动使用 setter 方法将数据属性的值更新为用户输入的值或执行相应的操作，然后重新渲染视图。
 */
-//?  121，getter和setter做了什么
-/*
-        当使用 Vue 的模板语法时，Vue 会自动使用 getter 方法获取数据属性的值，并将其渲染到视图中。
-        当用户与视图进行交互时，例如输入表单数据或点击按钮，
-        Vue 会自动使用 setter 方法将数据属性的值更新为用户输入的值或执行相应的操作，然后重新渲染视图。
-*/
-//?  122，flex：1代表什么
+//?  121，flex：1代表什么
 /*
         均匀分配元素
 */
-//?  122，flex：1代表什么
-/*
-        均匀分配元素
-*/
-//?  123，项目中如何鉴权的，即用户登录以后会发生什么
+//?  122，项目中如何鉴权的，即用户登录以后会发生什么
 /*
         1.客户端使用用户名跟密码请求登录
         2.服务端收到请求，去验证用户名与密码
@@ -1624,7 +1624,7 @@
 
         前端输入账号密码发送请求，获取到token后存到vuex或本地，每次请求时都在请求拦截器中加入token
 */
-//?  124，http的缓存
+//?  123，http的缓存
 /*
         HTTP 缓存是一个 web 性能优化的重要手段
 
@@ -1633,4 +1633,27 @@
         协商缓存：先向服务器发送一个请求，服务器会根据这个请求的头的一些参数来判断是否命中协商缓存，如果命中，则返回 304 状态码并带上新的响应头 通知浏览器从缓存中读取资源
 
 */
-// todo     vue3    webpack    Vue的生命周期做了什么   项目中遇到哪些难点              文档 2h  /  js 0.5h  /  vue 1h  /   性能优化0.5h   /   工程化 0.5h   /    css vite webpack 项目与业务 2
+//?  124，nuxt.js
+/*
+        基于vue的应用框架，关注的是渲染，可以开发服务端渲染应用
+        SSR渲染：生成的是有内容的html页面，有利于搜索引擎的搜索
+                 优化了首屏加载时间
+        SEO优化：在nuxt.config.js文件中配置head 设置关键字，img图片加alt做关键词优化等   robots.txt（入罢特）爬虫协议文件 
+*/
+//?  125，amap瓦片图
+/*
+        使用 API   new AMap.TileLayer（泰尔类儿）的第一个参数 getTileUrl 函数去指定图片的地址
+*/
+//?  126，scss全局变量
+/* 
+        在vue-cli中module.exports.css.loaderOptions.data || prependData 配置添加路径
+*/
+//?  127，WebSocket
+/* 
+        使用new WebSocket传入域名参数创建一个WebSocket对象，此时可以通过ws对象的onopen回调使用ws.send('12')发送消息
+        onmessage是接收服务端消息的回调，onclose是关闭的回调，onerror错误回调，ws.close()主动关闭连接
+*/
+//?  128，webpack
+/* 
+        五大核心概念：entry入口，output输出，loader加载器打包处理更多文件类型，plugins插件 扩展，mdoe模式
+*/
